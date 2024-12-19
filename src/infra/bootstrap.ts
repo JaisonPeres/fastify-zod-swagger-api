@@ -3,8 +3,8 @@ import { fastifyCors } from '@fastify/cors';
 import * as dotenv from "dotenv";
 import { fastify } from 'fastify';
 import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
-import { SwaggerConfig } from './docs/swagger';
-import { AppModule } from './app/app.module';
+import { SwaggerConfig } from '../docs/swagger';
+import { AppModule } from '../app/app.module';
 
 dotenv.config();
 

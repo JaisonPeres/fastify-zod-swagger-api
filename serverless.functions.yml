@@ -1,5 +1,5 @@
 app:
-  handler: src/lambda.handler
+  handler: src/infra/lambda.handler
   reservedConcurrency: 1
   events:
     - http:

@@ -1,5 +1,5 @@
 import { BootstrapFactory } from "../../infra/factories/BootstrapFactory";
-import { FastifyTypeInstance } from "../../types";
+import { FastifyTypeInstance } from "../../infra/types";
 import { AuthGuard } from "../auth/auth.guard";
 import { createUserSchema } from "./schemas/create-user.schema";
 import { getUserSchema, getUsersSchema } from "./schemas/get-user.schema";

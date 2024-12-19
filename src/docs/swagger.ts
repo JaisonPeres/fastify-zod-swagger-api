@@ -1,11 +1,9 @@
 import fastifySwagger from "@fastify/swagger";
-import { FastifyTypeInstance } from "../types";
-import { readFileSync } from "fs";
-import { jsonSchemaTransform } from "fastify-type-provider-zod";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-import { UserModule } from "../app/users/users.module";
-import { AuthModule } from "../app/auth/auth.module";
+import { jsonSchemaTransform } from "fastify-type-provider-zod";
+import { readFileSync } from "fs";
 import { BootstrapFactory } from "../infra/factories/BootstrapFactory";
+import { FastifyTypeInstance } from "../infra/types";
 
 const DESCRIPTION_MD_FILE = 'src/docs/description.md';
 const LOGO_FILE = 'src/docs/logo.png';

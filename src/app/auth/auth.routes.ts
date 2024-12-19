@@ -1,5 +1,5 @@
 import z from "zod";
-import { FastifyTypeInstance } from "../../types";
+import { FastifyTypeInstance } from "../../infra/types";
 import { AuthController } from "./auth.controller";
 import { loginSchema } from "./schemas/login.schema";
 import { authResponseSchema } from "./schemas/auth-response.schema";

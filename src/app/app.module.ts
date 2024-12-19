@@ -1,5 +1,5 @@
 import { BootstrapFactory } from "../infra/factories/BootstrapFactory";
-import { FastifyTypeInstance } from "../types";
+import { FastifyTypeInstance } from "../infra/types";
 
 export class AppModule {
   static async register(app: FastifyTypeInstance) {

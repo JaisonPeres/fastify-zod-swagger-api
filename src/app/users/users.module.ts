@@ -1,5 +1,5 @@
 import { IModule } from "../../domain/IModule";
-import { FastifyTypeInstance } from "../../types";
+import { FastifyTypeInstance } from "../../infra/types";
 import { userRoutes } from "./users.routes";
 
 export class UserModule implements IModule {

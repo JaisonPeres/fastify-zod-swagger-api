@@ -1,0 +1,96 @@
+service: onbloc-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ${env:AWS_REGION, 'us-east-1'}
+  timeout: 30
+  memorySize: 2048
+  versionFunctions: false
+  apiGateway:
+    minimumCompressionSize: 1024
+  stage: ${opt:stage, 'dev'}
+  stackTags:
+    project: 'onbloc-api'
+  environment:
+    STAGE: ${opt:stage, 'dev'}
+    SLS_DEBUG: ${env:SLS_DEBUG, '*'}
+    CUSTOM_DOMAIN_ZONE_ID: ${env:CUSTOM_DOMAIN_ZONE_ID, ''}
+    CERTIFICATE_ARN: ${env:CERTIFICATE_ARN, ''}
+    STORAGE_BUCKET: ${self:custom.filesUploadBucket}
+    DATABASE_URL: ${env:DATABASE_URL, ''}
+    ENVIRONMENT: ${env:ENVIRONMENT, 'dev'}
+    JWT_SECRET: ${env:JWT_SECRET, ''}
+    JWT_EXPIRE: ${env:JWT_EXPIRE, '1d'}
+    RESEND_TOKEN: ${env:RESEND_TOKEN, ''}
+    DEFAULT_FROM_EMAIL: ${env:DEFAULT_FROM_EMAIL, ''}
+    BLOCK_EXCEDED_LIMITS: ${env:BLOCK_EXCEDED_LIMITS, 'false'}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource: '*'
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:PutItem
+      Resource: '*'
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+        - ssm:GetParameters
+      Resource: '*'
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+        - S3:DeleteObject
+      Resource:
+        - 'arn:aws:s3:::${self:custom.filesUploadBucket}'
+        - 'arn:aws:s3:::${self:custom.filesUploadBucket}/*'
+    - Effect: Allow
+      Action:
+        - s3:CreateBucket
+        - s3:GetObject
+        - s3:PutObject
+        - s3:HeadBucket
+        - s3:ListBucket
+      Resource: '*'
+    - Effect: 'Allow'
+      Action:
+        - 'logs:CreateLogStream'
+        - 'logs:CreateLogGroup'
+      Resource: '*'
+    - Effect: 'Allow'
+      Action:
+        - 'lambda:InvokeFunction'
+      Resource: '*'
+    - Effect: 'Allow'
+      Action:
+        - 'rds:DescribeDBInstances'
+      Resource: '*'
+    - Effect: 'Allow'
+      Action:
+        - 'ses:SendEmail'
+        - 'ses:SendRawEmail'
+      Resource: '*'
+
+functions: ${file(./serverless.functions.yml)}
+
+package:
+  individually: false
+  excludeDevDependencies: true
+  patterns:
+    - '!node_modules/**'
+    - '!.git/**'
+    - '!.gitignore'
+    - 'dist/infra/db/**'
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-domain-manager
+  - serverless-offline
+  - serverless-plugin-resource-tagging
+
+custom: ${file(./serverless.custom.yml)}

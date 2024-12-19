@@ -1,0 +1,45 @@
+esbuild:
+  bundle: true
+  minify: true
+  external:
+    - 'tedious'
+    - 'pg-query-stream'
+    - 'better-sqlite3'
+    - 'mysql2'
+    - 'sqlite3'
+    - 'pg-native'
+    - 'mysql'
+    - 'oracledb'
+    - 'sharp'
+  packagerOptions:
+    scripts:
+      - npm install --os=linux --cpu=x64 sharp
+stageDomain:
+  production: 'api.onbloc.com'
+  dev: 'dev-api.onbloc.com'
+  hml: 'hml-api.onbloc.com'
+  other: '${self:provider.stage}-api.onbloc.com'
+createStageDomain:
+  production: true
+  dev: true
+  hml: true
+  other: true
+notificationURL:
+  production: 'production'
+  other: 'dev'
+customDomain:
+  autoDomain: true
+  domainName: ${self:custom.stageDomain.${self:provider.stage}, self:custom.stageDomain.other}
+  stage: ${self:provider.stage}
+  createRoute53Record: ${self:custom.createStageDomain.${self:provider.stage}, self:custom.createStageDomain.other}
+  endpointType: 'regional'
+  securityPolicy: tls_1_2
+  hostedZoneId: ${env:CUSTOM_DOMAIN_ZONE_ID, ''}
+serverlessTerminationProtection:
+  stages:
+    - ${self:provider.stage}
+serverless-offline:
+  httpPort: 3001
+  websocketPort: 3002
+  lambdaPort: 3003
+filesUploadBucket: ${env:STORAGE_BUCKET, ''}

@@ -1,0 +1,8 @@
+app:
+  handler: src/lambda.handler
+  reservedConcurrency: 1
+  events:
+    - http:
+        path: /{proxy+}
+        method: ANY
+        cors: ${file(./serverless.cors.yml)}

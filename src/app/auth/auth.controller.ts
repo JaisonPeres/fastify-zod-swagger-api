@@ -1,9 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { LoginSchema } from "./schemas/login.schema";
-import { FastifyReply, FastifyRequest } from "fastify";
+import { AuthResponse } from "./schemas/auth-response.schema";
 
 export class AuthController {
-  async login(payload: LoginSchema): Promise<void> {
-    // Do something with the payload
+  async login(payload: LoginSchema): Promise<AuthResponse> {
+    return {
+      token: randomUUID(),
+    }
   }
 }

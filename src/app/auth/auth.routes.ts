@@ -19,7 +19,7 @@ export async function authRoutes(app: FastifyTypeInstance) {
       }
     }
   }, async (request, reply) => {
-    await authController.login(request.body);
-    return reply.status(200).send();
+    const response = await authController.login(request.body);
+    return reply.status(200).send(response);
   });
 }

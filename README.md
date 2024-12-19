@@ -17,3 +17,8 @@ pnpm start:ts
 ```bash
 pnpm start:sls
 ```
+
+## Build
+```bash
+pnpm build
+```

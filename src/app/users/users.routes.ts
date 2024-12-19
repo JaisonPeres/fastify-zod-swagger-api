@@ -1,36 +1,43 @@
-import z from "zod";
+import { BootstrapFactory } from "../../infra/factories/BootstrapFactory";
 import { FastifyTypeInstance } from "../../types";
+import { AuthGuard } from "../auth/auth.guard";
 import { createUserSchema } from "./schemas/create-user.schema";
-import { getUserSchema } from "./schemas/get-user.schema";
-import { UserController } from "./users.controller";
+import { getUserSchema, getUsersSchema } from "./schemas/get-user.schema";
 
 export async function userRoutes(app: FastifyTypeInstance) {
-  const userController = new UserController();
+  const { userController, userModule } = BootstrapFactory.create();
 
-  app.get('/users', {
+  const path = '/users';
+  const tags = [userModule.info.name];
+
+  app.get(path, {
     schema: {
-      tags: ['user'],
+      tags,
       description: 'List all users',
       response: {
-        200: getUserSchema,
-      }
-    }
+        200: getUsersSchema.describe('List of users'),
+      },
+      security: [{ bearerAuth: [] }],
+    },
+    preValidation: AuthGuard.token,
   }, async (request, reply) => {
     const users = await userController.getUsers();
     return reply.send(users);
   });
 
-  app.post('/users', {
+  app.post(path, {
     schema: {
-      tags: ['user'],
+      tags,
       description: 'Create a new user',
       body: createUserSchema,
       response: {
-        201: z.null().describe('User created'),
-      }
-    }
+        201: getUserSchema.describe('User created'),
+      },
+      security: [{ bearerAuth: [] }],
+    },
+    preValidation: AuthGuard.token,
   }, async (request, reply) => {
-    await userController.createUser(request.body);
-    return reply.status(201).send();
+    const user = await userController.createUser(request.body);
+    return reply.status(201).send(user);
   });
 }

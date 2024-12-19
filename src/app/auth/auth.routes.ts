@@ -3,13 +3,15 @@ import { FastifyTypeInstance } from "../../types";
 import { AuthController } from "./auth.controller";
 import { loginSchema } from "./schemas/login.schema";
 import { authResponseSchema } from "./schemas/auth-response.schema";
+import { AuthModule } from "./auth.module";
+import { BootstrapFactory } from "../../infra/factories/BootstrapFactory";
 
 export async function authRoutes(app: FastifyTypeInstance) {
-  const authController = new AuthController();
+  const { authModule, authController } = BootstrapFactory.create();
 
   app.post('/login', {
     schema: {
-      tags: ['auth'],
+      tags: [authModule.info.name],
       description: 'Login',
       body: loginSchema,
       response: {

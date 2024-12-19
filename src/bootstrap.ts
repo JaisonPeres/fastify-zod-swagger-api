@@ -1,12 +1,10 @@
 
-import { fastify } from 'fastify';
 import { fastifyCors } from '@fastify/cors';
-import { validatorCompiler, serializerCompiler, ZodTypeProvider, jsonSchemaTransform } from 'fastify-type-provider-zod';
-import { fastifySwagger } from "@fastify/swagger"
-import { fastifySwaggerUi } from '@fastify/swagger-ui';
-import { routes } from './routes';
-import { openapi } from './docs/openapi';
 import * as dotenv from "dotenv";
+import { fastify } from 'fastify';
+import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
+import { SwaggerConfig } from './docs/swagger';
+import { AppModule } from './app/app.module';
 
 dotenv.config();
 
@@ -24,18 +22,15 @@ const init = () => {
     origin: '*',
   });
 
-  app.register(fastifySwagger, {
-    openapi: {
-      ...openapi(),
-    },
-    transform: jsonSchemaTransform,
-  });
+  SwaggerConfig.register(app);
 
-  app.register(fastifySwaggerUi, {
-    routePrefix: '/docs'
-  });
+  AppModule.register(app);
 
-  app.register(routes);
+  app.setNotFoundHandler(async (request, reply) => {
+    reply.status(404).send({
+      message: 'Not found',
+    });
+  });
 
   return app;
 }
@@ -56,5 +51,5 @@ const serverless = () => {
 
 export {
   server,
-  serverless,
-}
+  serverless
+};

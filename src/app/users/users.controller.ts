@@ -10,12 +10,16 @@ export interface User {
 }
 
 export class UserController {
-  async createUser(payload: CreateUserSchema): Promise<void> {
-    console.log('Creating user', payload);
-    await users.push({
+  async createUser(payload: CreateUserSchema): Promise<User> {
+    const user: User = {
       id: randomUUID(),
-      ...payload,
-    });
+      name: payload.name,
+      email: payload.email,
+    };
+
+    users.push(user);
+
+    return user;
   }
 
   async getUsers(): Promise<User[]> {

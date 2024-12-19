@@ -13,6 +13,8 @@ pnpm install
 pnpm start:ts
 ```
 
+Running with TS, you can access the swagger docs at `/docs`
+
 ## Run with Serverless offline
 ```bash
 pnpm start:sls

@@ -4,6 +4,7 @@ import { jsonSchemaTransform } from "fastify-type-provider-zod";
 import { readFileSync } from "fs";
 import { BootstrapFactory } from "../infra/factories/BootstrapFactory";
 import { FastifyTypeInstance } from "../infra/types";
+import { loadBuffer } from "../common/image";
 
 const DESCRIPTION_MD_FILE = 'src/docs/description.md';
 const LOGO_FILE = 'src/docs/logo.png';
@@ -17,13 +18,9 @@ export class SwaggerConfig {
   static register(app: FastifyTypeInstance) {
     const description = readFileSync(DESCRIPTION_MD_FILE, 'utf-8');
 
-    const logoFile = readFileSync(LOGO_FILE);
-    const logoToBase64 = Buffer.from(logoFile).toString('base64');
-    const logoToBuffer = Buffer.from(logoToBase64, 'base64');
+    const logo = loadBuffer(LOGO_FILE);
     
-    const faviconFile = readFileSync(FAVICON_FILE);
-    const faviconToBase64 = Buffer.from(faviconFile).toString('base64');
-    const faviconToBuffer = Buffer.from(faviconToBase64, 'base64');
+    const favicon = loadBuffer(FAVICON_FILE);
 
     const themeContent = readFileSync(THEME_CSS_FILE, 'utf-8')
 
@@ -78,7 +75,7 @@ export class SwaggerConfig {
       transformSpecificationClone: true,
       logo: {
         type: 'image/png',
-        content: logoToBuffer,
+        content: logo,
         href: 'https://onbloc.dev.br',
         target: '_blank',
       },
@@ -94,7 +91,7 @@ export class SwaggerConfig {
             rel: 'icon',
             sizes: '16x16',
             type: 'image/png',
-            content: faviconToBuffer,
+            content: favicon,
           }
         ]
       }
